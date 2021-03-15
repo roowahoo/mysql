@@ -60,6 +60,7 @@ insert into Parents (surname, given_name, email)
            ('Sue','Mary','marysue@fake.com.sg');
 
 
+
 -- creating foreign keys
 create table Students (
     student_id int unsigned auto_increment primary key,
@@ -118,3 +119,24 @@ alter table Students modify gender varchar(1);
 
 -- delete table(only works if table has no foreign keys)
 drop table Fake;
+
+-- to delete a row, we use DELETE FROM
+delete from Parents where parent_id=3;
+
+-- to modify from a row, we use UPDATE
+update Students set given_name='Susan' where student_id=2
+
+-- below wont work because of foreign key constraint
+update Students set parent_id=100 where student_id=2
+
+-- add in foreign key after a table has been created
+create table Coaches(
+    coach_id tinyint unsigned auto_increment primary key,
+    `name` varchar(100) not null
+)engine=innodb;
+-- 1. add in new column
+alter table Sessions add coach_id tinyint unsigned not null;
+
+-- 2. add in foreign key definition
+alter table Sessions add foreign key(coach_id)
+    references Coaches(coach_id);
