@@ -70,3 +70,84 @@ AND jobtitle='Sales rep'
 
 SELECT * FROM orderdetails join products
 ON orderdetails.productcode=products.productcode
+
+---------- END OF PRACTICE QUESTION-----------
+
+-- search by date
+SELECT * FROM orders where orderdate<'2003-07-16'
+
+-- extract year,month,date
+SELECT ordernumber,orderdate FROM orders where YEAR(orderdate)=2003 AND MONTH(orderdate)=2
+
+-- find all orders require to ship in 3 days time
+SELECT * from orders where requiredDate -CURDATE()=3 
+
+-- find all orders require to ship in 3 days ago
+SELECT * from orders where CURDATE() - shippeddate <3
+
+-- AGGREGATION aka reducing in array
+
+-- counts number of orders
+SELECT count(*) from orders
+
+-- finds the sum of creditlimit
+SELECT sum(creditlimit) FROM customers;
+
+-- adding criteria
+select avg(creditlimit) from customers where country='usa'
+
+select max(creditlimit) from customers where country='usa'
+select min(creditlimit) from customers where country='usa'
+
+-- remove duplicates
+select distinct(country) from customers
+
+select avg(creditlimit), country FROM customers
+GROUP BY country
+
+SELECT offices.officecode,city,count(*) AS 'employee_count' FROM employees
+JOIN offices on employees.officecode=offices.officecode
+GROUP BY officecode
+
+SELECT offices.officecode,city,count(*) AS 'employee_count' FROM employees
+JOIN offices on employees.officecode=offices.officecode
+WHERE jobtitle='sales rep'
+GROUP BY officecode,city
+
+SELECT offices.officecode,city,count(*) AS 'employee_count' FROM employees
+JOIN offices on employees.officecode=offices.officecode
+WHERE jobtitle='sales rep'
+GROUP BY officecode,city
+HAVING count(*)>2
+ORDER BY count(*)
+
+-- PRACTICE QUESTIONS
+-- 7.
+SELECT offices.officecode,state,count(*) FROM offices join employees
+ON offices.officecode=employees.officecode
+WHERE country='usa'
+GROUP BY state
+-- 8.
+SELECT avg(amount),customername customers.customernumber FROM payments JOIN customers ON payments.customernumber = customers.customernumber
+GROUP BY customername customers.customernumber
+-- 9.
+SELECT customers.customernumber,customername avg(amount) FROM payments JOIN customers
+ON payments.customernumber = customers.customernumber
+GROUP BY customers.customernumber,customername
+HAVING AVG(amount)>10000
+-- 10.
+SELECT productcode,count(*) FROM orderdetails
+GROUP BY productcode
+ORDER BY count(*) DESC
+LIMIT 10
+
+-- 11.
+SELECT * FROM orders where YEAR(orderdate)=2003
+-- OR
+SELECT * FROM orders
+WHERE orderdate>='2003-01-01' AND orderdate<='2003-12-31'
+
+-- 12.
+SELECT count(*), MONTH(orderdate) FROM orders 
+WHERE YEAR(orderdate)=2003
+GROUP BY MONTH(orderdate)
